@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, firebaseSignIn, firebaseSignOut } from './firebase';
+import { Outlet } from 'react-router-dom';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -21,7 +22,7 @@ export default function App() {
 
   return (
     <>
-      <h1>Firebase Auth App</h1>
+      <h1 className="sr-only">Firebase Auth App</h1>
       <p>Logged In: {currentUser?.displayName}</p>
 
       {currentUser ? (
@@ -32,6 +33,7 @@ export default function App() {
       ) : (
         <button onClick={firebaseSignIn}>Sign In</button>
       )}
+      <Outlet />
     </>
   );
 }
