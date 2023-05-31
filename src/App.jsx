@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, firebaseSignIn, firebaseSignOut } from './firebase';
+import { Outlet } from 'react-router-dom';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [displayName, setDisplayName] = useState('');
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -24,14 +26,14 @@ export default function App() {
 
   return (
     <>
-      <h1>Firebase Auth App</h1>
+      <h1 className="sr-only">Firebase Auth App</h1>
       <p>Logged In: {displayName}</p>
-
       {loggedIn ? (
         <button onClick={firebaseSignOut}>Sign Out</button>
       ) : (
         <button onClick={firebaseSignIn}>Sign In</button>
       )}
+      <Outlet />
     </>
   );
 }
