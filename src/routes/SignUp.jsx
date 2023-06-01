@@ -7,8 +7,20 @@ import Google from '../assets/Google.svg';
 import Twitter from '../assets/Twitter.svg';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
+import { firebaseSignIn } from '../firebase';
+import {
+  FacebookAuthProvider,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  TwitterAuthProvider,
+} from 'firebase/auth';
 
-export default function LogIn() {
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+const githubProvider = new GithubAuthProvider();
+const twitterProvider = new TwitterAuthProvider();
+
+export default function SignUp() {
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => console.log('data', data);
   const onError = (errors, e) => console.log(errors, e);
@@ -26,8 +38,8 @@ export default function LogIn() {
 
   return (
     <div
-      id="LogIn"
-      className="flex w-full flex-col gap-8 rounded-xl p-6 xs:m-auto xs:max-w-md xs:p-12 xs:outline xs:outline-1 xs:outline-slate-500"
+      id="SignUp"
+      className="flex max-w-md flex-col gap-8 rounded-xl p-6 xs:m-auto xs:p-12 xs:outline xs:outline-1 xs:outline-slate-500"
     >
       <div
         id="form-header"
@@ -38,7 +50,11 @@ export default function LogIn() {
           alt="devchallenges logo"
           className="mb-4 max-w-[120px]"
         />
-        <p className="text-xl font-bold">Login</p>
+        <p className="text-xl font-bold">Join thousands of learners from around the world</p>
+        <p>
+          Master web development by making real-life projects. There are multiple paths for you to
+          start your journey!
+        </p>
       </div>
       <form
         className="flex flex-col gap-4"
@@ -96,7 +112,7 @@ export default function LogIn() {
             className="w-full rounded py-2 pl-10 pr-4 outline outline-1 outline-slate-500"
           />
         </label>
-        <button className="rounded bg-blue-500 px-4 py-2 text-white">Log In</button>
+        <button className="rounded bg-blue-500 px-4 py-2 text-white">Sign Up</button>
       </form>
       <div id="social-auth">
         <p className="mb-4 text-center">or continue with these social profiles</p>
@@ -104,25 +120,25 @@ export default function LogIn() {
           id="providers"
           className="flex justify-center gap-4"
         >
-          <button>
+          <button onClick={async () => await firebaseSignIn(googleProvider)}>
             <img
               src={Google}
               alt="google logo"
             />
           </button>
-          <button>
+          <button onClick={async () => await firebaseSignIn(githubProvider)}>
             <img
               src={Github}
               alt="github logo"
             />
           </button>
-          <button>
+          <button onClick={async () => await firebaseSignIn(facebookProvider)}>
             <img
               src={Facebook}
               alt="facebook logo"
             />
           </button>
-          <button>
+          <button onClick={async () => await firebaseSignIn(twitterProvider)}>
             <img
               src={Twitter}
               alt="twitter logo"
@@ -131,12 +147,12 @@ export default function LogIn() {
         </div>
       </div>
       <p className="text-center">
-        Don&apos;t have an account yet?{' '}
+        Already a member?{' '}
         <Link
-          to="/signup"
+          to="/login"
           className="text-blue-500"
         >
-          Signup
+          Login
         </Link>
       </p>
     </div>

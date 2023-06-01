@@ -1,12 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import {
-  getAuth,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithPopup,
-  signOut,
-} from 'firebase/auth';
+import { getAuth, signInWithPopup, signOut } from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,32 +18,20 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-export function firebaseSignIn() {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const name = result.user.displayName;
-      const email = result.user.email;
-      const profilePic = result.user.photoURL;
-
-      localStorage.setItem('name', name);
-      localStorage.setItem('email', email);
-      localStorage.setItem('profilePic', profilePic);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+export async function firebaseSignIn(provider) {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    // const { displayName, email, photoURL } = await result.user.displayName;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-export function firebaseSignOut() {
-  signOut(auth)
-    .then(() => {
-      // Sign-out successful.
-      console.log('sign-out successful!')
-    })
-    .catch((error) => {
-      console.log('error while signing out')
-      // An error happened.
-    });
+export async function firebaseSignOut() {
+  try {
+    await signOut(auth);
+  } catch (err) {
+    console.log(err);
+  }
 }

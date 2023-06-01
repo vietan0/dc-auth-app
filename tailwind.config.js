@@ -4,9 +4,13 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      xs: '460px',
+      ...defaultTheme.screens,
+    },
     extend: {
       fontFamily: {
-        sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+        sans: ['Manrope', ...defaultTheme.fontFamily.sans],
       },
     },
   },

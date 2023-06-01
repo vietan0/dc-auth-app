@@ -1,7 +1,12 @@
-import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, firebaseSignIn, firebaseSignOut } from './firebase';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { auth } from './firebase';
+import Home from './routes/Home';
+import LogIn from './routes/LogIn';
+import NotFound from './routes/NotFound';
+import Profile from './routes/Profile';
+import SignUp from './routes/SignUp';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -21,19 +26,33 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <div
+      id="App"
+      className="flex min-h-screen bg-white dark:bg-zinc-900"
+    >
       <h1 className="sr-only">Firebase Auth App</h1>
-      <p>Logged In: {currentUser?.displayName}</p>
-
-      {currentUser ? (
-        <>
-          <button onClick={firebaseSignOut}>Sign Out</button>
-          <pre>{JSON.stringify(currentUser, null, 2)}</pre>
-        </>
-      ) : (
-        <button onClick={firebaseSignIn}>Sign In</button>
-      )}
-      <Outlet />
-    </>
+      <Routes>
+        <Route
+          path="/"
+          element={<Home />}
+        />
+        <Route
+          path="/login"
+          element={<LogIn />}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp />}
+        />
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
+        <Route
+          path="*"
+          element={<NotFound />}
+        />
+      </Routes>
+    </div>
   );
 }
