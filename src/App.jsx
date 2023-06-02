@@ -5,8 +5,9 @@ import { auth } from './firebase';
 import Home from './routes/Home';
 import LogIn from './routes/LogIn';
 import NotFound from './routes/NotFound';
-import Profile from './routes/Profile';
 import SignUp from './routes/SignUp';
+import Feed from './routes/Feed';
+import Profile from './routes/Profile';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -35,7 +36,13 @@ export default function App() {
         <Route
           path="/"
           element={<Home />}
-        />
+        >
+          <Route index element={<Feed />} />
+          <Route
+            path="profile"
+            element={<Profile />}
+          />
+        </Route>
         <Route
           path="/login"
           element={<LogIn />}
@@ -43,10 +50,6 @@ export default function App() {
         <Route
           path="/signup"
           element={<SignUp />}
-        />
-        <Route
-          path="/profile"
-          element={<Profile />}
         />
         <Route
           path="*"

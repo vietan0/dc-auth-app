@@ -1,28 +1,28 @@
-import { Link } from 'react-router-dom';
-import dcLight from '../assets/devchallenges-light.svg';
-import dc from '../assets/devchallenges.svg';
+import { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Facebook from '../assets/Facebook.svg';
 import Github from '../assets/Github.svg';
 import Google from '../assets/Google.svg';
 import Twitter from '../assets/Twitter.svg';
-import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import dcLight from '../assets/devchallenges-light.svg';
+import dc from '../assets/devchallenges.svg';
+import { emailSignIn } from '../firebase';
+import { UserContext } from '../contexts/UserContext';
 
 export default function LogIn() {
+  const { currentUser, darkMode } = useContext(UserContext);
+  const nav = useNavigate();
+
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => console.log('data', data);
+  const onSubmit = async (data) => {
+    await emailSignIn(data);
+  };
   const onError = (errors, e) => console.log(errors, e);
-  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    if (window?.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDarkMode(true);
-    }
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-      setDarkMode(event.matches);
-    });
-  }, []);
+    if (currentUser) nav('/');
+  }, [currentUser, nav]);
 
   return (
     <div
