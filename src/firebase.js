@@ -1,6 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, signOut } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithPopup,
+  signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,7 +25,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-export async function firebaseSignIn(provider) {
+export async function emailSignUp({ email, password }) {
+  try {
+    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function emailSignIn({email, password}) {
+  try {
+    const userCred = await signInWithEmailAndPassword(auth, email, password);
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
+export async function oAuthSignIn(provider) {
   try {
     const result = await signInWithPopup(auth, provider);
     // const { displayName, email, photoURL } = await result.user.displayName;

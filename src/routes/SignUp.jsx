@@ -1,19 +1,20 @@
-import { Link } from 'react-router-dom';
-import dcLight from '../assets/devchallenges-light.svg';
-import dc from '../assets/devchallenges.svg';
-import Facebook from '../assets/Facebook.svg';
-import Github from '../assets/Github.svg';
-import Google from '../assets/Google.svg';
-import Twitter from '../assets/Twitter.svg';
-import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import { firebaseSignIn } from '../firebase';
 import {
   FacebookAuthProvider,
   GithubAuthProvider,
   GoogleAuthProvider,
   TwitterAuthProvider,
 } from 'firebase/auth';
+import { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import Facebook from '../assets/Facebook.svg';
+import Github from '../assets/Github.svg';
+import Google from '../assets/Google.svg';
+import Twitter from '../assets/Twitter.svg';
+import dcLight from '../assets/devchallenges-light.svg';
+import dc from '../assets/devchallenges.svg';
+import { emailSignUp, oAuthSignIn } from '../firebase';
+import { UserContext } from '../contexts/UserContext';
 
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
@@ -21,26 +22,25 @@ const githubProvider = new GithubAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
 export default function SignUp() {
+  const { currentUser, darkMode } = useContext(UserContext);
+  const nav = useNavigate();
+
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => console.log('data', data);
+  const onSubmit = async (data) => {
+    await emailSignUp(data);
+  };
   const onError = (errors, e) => console.log(errors, e);
-  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    if (window?.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDarkMode(true);
-    }
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-      setDarkMode(event.matches);
-    });
-  }, []);
+    if (currentUser) nav('/');
+  }, [currentUser, nav]);
 
   return (
     <div
       id="SignUp"
       className="flex max-w-md flex-col gap-8 rounded-xl p-6 xs:m-auto xs:p-12 xs:outline xs:outline-1 xs:outline-slate-500"
     >
+      {currentUser && <Navigate to="/" />}
       <div
         id="form-header"
         className="flex flex-col gap-4"
@@ -120,25 +120,25 @@ export default function SignUp() {
           id="providers"
           className="flex justify-center gap-4"
         >
-          <button onClick={async () => await firebaseSignIn(googleProvider)}>
+          <button onClick={async () => await oAuthSignIn(googleProvider)}>
             <img
               src={Google}
               alt="google logo"
             />
           </button>
-          <button onClick={async () => await firebaseSignIn(githubProvider)}>
+          <button onClick={async () => await oAuthSignIn(githubProvider)}>
             <img
               src={Github}
               alt="github logo"
             />
           </button>
-          <button onClick={async () => await firebaseSignIn(facebookProvider)}>
+          <button onClick={async () => await oAuthSignIn(facebookProvider)}>
             <img
               src={Facebook}
               alt="facebook logo"
             />
           </button>
-          <button onClick={async () => await firebaseSignIn(twitterProvider)}>
+          <button onClick={async () => await oAuthSignIn(twitterProvider)}>
             <img
               src={Twitter}
               alt="twitter logo"
