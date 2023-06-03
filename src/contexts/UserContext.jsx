@@ -1,25 +1,20 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext, useEffect, useMemo, useState,
+} from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
+import { node } from 'prop-types';
 import { auth } from '../firebase';
 
 export const UserContext = createContext();
 
 export default function UserContextProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState(localStorage.getItem('user') ? JSON.stringify(localStorage.getItem('user')) : null);
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        setCurrentUser(user.toJSON());
-        // ...
-      } else {
-        // User is signed out
-        setCurrentUser(null);
-        // ...
-      }
+      setCurrentUser(user?.toJSON() || null);
+      localStorage.setItem('user', JSON.stringify(user?.toJSON()) || null);
     });
   }, []);
 
@@ -36,3 +31,7 @@ export default function UserContextProvider({ children }) {
 
   return <UserContext.Provider value={passedVals}>{children}</UserContext.Provider>;
 }
+
+UserContextProvider.propTypes = {
+  children: node.isRequired,
+};

@@ -1,25 +1,11 @@
-import {
-  FacebookAuthProvider,
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  TwitterAuthProvider,
-} from 'firebase/auth';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import Facebook from '../assets/Facebook.svg';
-import Github from '../assets/Github.svg';
-import Google from '../assets/Google.svg';
-import Twitter from '../assets/Twitter.svg';
+import { Link, useNavigate } from 'react-router-dom';
 import dcLight from '../assets/devchallenges-light.svg';
 import dc from '../assets/devchallenges.svg';
-import { emailSignUp, oAuthSignIn } from '../firebase';
 import { UserContext } from '../contexts/UserContext';
-
-const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
-const githubProvider = new GithubAuthProvider();
-const twitterProvider = new TwitterAuthProvider();
+import { emailSignUp } from '../firebase';
+import OAuth from '../components/OAuth';
 
 export default function SignUp() {
   const { currentUser, darkMode } = useContext(UserContext);
@@ -40,7 +26,6 @@ export default function SignUp() {
       id="SignUp"
       className="flex max-w-md flex-col gap-8 rounded-xl p-6 xs:m-auto xs:p-12 xs:outline xs:outline-1 xs:outline-slate-500"
     >
-      {currentUser && <Navigate to="/" />}
       <div
         id="form-header"
         className="flex flex-col gap-4"
@@ -83,7 +68,7 @@ export default function SignUp() {
             {...register('email')}
             id="email"
             placeholder="Email"
-            className="w-full rounded py-2 pl-10 pr-4 outline outline-1 outline-slate-500"
+            className="w-full rounded bg-transparent py-2 pl-10 pr-4 outline outline-1 outline-slate-500 focus:outline-4 focus:outline-blue-500"
           />
         </label>
         <label
@@ -109,45 +94,20 @@ export default function SignUp() {
             {...register('password')}
             id="password"
             placeholder="Password"
-            className="w-full rounded py-2 pl-10 pr-4 outline outline-1 outline-slate-500"
+            className="w-full rounded bg-transparent py-2 pl-10 pr-4 outline outline-1 outline-slate-500 focus:outline-4 focus:outline-blue-500"
           />
         </label>
-        <button className="rounded bg-blue-500 px-4 py-2 text-white">Sign Up</button>
-      </form>
-      <div id="social-auth">
-        <p className="mb-4 text-center">or continue with these social profiles</p>
-        <div
-          id="providers"
-          className="flex justify-center gap-4"
+        <button
+          type="button"
+          className="btn-primary"
         >
-          <button onClick={async () => await oAuthSignIn(googleProvider)}>
-            <img
-              src={Google}
-              alt="google logo"
-            />
-          </button>
-          <button onClick={async () => await oAuthSignIn(githubProvider)}>
-            <img
-              src={Github}
-              alt="github logo"
-            />
-          </button>
-          <button onClick={async () => await oAuthSignIn(facebookProvider)}>
-            <img
-              src={Facebook}
-              alt="facebook logo"
-            />
-          </button>
-          <button onClick={async () => await oAuthSignIn(twitterProvider)}>
-            <img
-              src={Twitter}
-              alt="twitter logo"
-            />
-          </button>
-        </div>
-      </div>
+          Sign Up
+        </button>
+      </form>
+      <OAuth />
       <p className="text-center">
-        Already a member?{' '}
+        Already a member?
+        {' '}
         <Link
           to="/login"
           className="text-blue-500"

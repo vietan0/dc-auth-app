@@ -33,11 +33,10 @@ export async function emailSignUp({ email, password }) {
   }
 }
 
-export async function emailSignIn({email, password}) {
+export async function emailSignIn({ email, password }) {
   try {
     const userCred = await signInWithEmailAndPassword(auth, email, password);
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
   }
 }
